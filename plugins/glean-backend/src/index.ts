@@ -1,1 +1,1 @@
-export * from './service/router';
+export { gleanPlugin as default } from './plugin';

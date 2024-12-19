@@ -1,16 +1,19 @@
 import { getVoidLogger } from '@backstage/backend-common';
-import { CompoundEntityRef } from '@backstage/catalog-model';
+import { mockServices } from '@backstage/backend-test-utils';
+import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { TechDocsMetadata } from '@backstage/plugin-techdocs-backend';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { TechDocsClient } from './TechDocsClient';
+import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 
 describe('TechDocsClient', () => {
   let techDocsClient: TechDocsClient;
   const server = setupServer();
   const discoveryApi = { getBaseUrl: jest.fn() };
   const baseUrl = 'http://localhost/api';
+  const auth = mockServices.auth();
 
   const config = new ConfigReader({
     backend: {
@@ -23,17 +26,37 @@ describe('TechDocsClient', () => {
     },
   });
 
-  const entity: CompoundEntityRef = {
-    kind: 'component',
-    namespace: 'default',
-    name: 'some-handbook',
+  const entityWithTechdocsRef: Entity = {
+    apiVersion: 'backstage.io/v1alpha1',
+    kind: 'Component',
+    metadata: {
+      name: 'some-handbook',
+      namespace: 'default',
+      annotations: {
+        'backstage.io/techdocs-ref': 'url:some_url',
+      },
+      spec: {},
+    },
   };
+  const entityWithoutTechdocsRef: Entity = {
+    apiVersion: 'backstage.io/v1alpha1',
+    kind: 'Component',
+    metadata: {
+      name: 'some-handbook-no-techdocs-ref',
+      namespace: 'default',
+      spec: {},
+    },
+  };
+  const entities = [entityWithTechdocsRef, entityWithoutTechdocsRef];
+  const catalogApi = catalogServiceMock({ entities });
 
   beforeAll(() => server.listen());
 
   beforeEach(() => {
     discoveryApi.getBaseUrl.mockResolvedValue(baseUrl);
     techDocsClient = TechDocsClient.create({
+      auth,
+      catalogApi,
       config,
       discoveryApi,
       logger: getVoidLogger(),
@@ -51,6 +74,8 @@ describe('TechDocsClient', () => {
     it('returns a new instance of techDocsClient', () => {
       expect(
         TechDocsClient.create({
+          auth,
+          catalogApi,
           config,
           logger: getVoidLogger(),
           discoveryApi,
@@ -61,7 +86,7 @@ describe('TechDocsClient', () => {
 
   describe('getEntityUri', () => {
     it('returns the entity URI', () => {
-      expect(techDocsClient.getEntityUri(entity)).toEqual(
+      expect(techDocsClient.getEntityUri(entityWithTechdocsRef)).toEqual(
         'default/component/some-handbook',
       );
     });
@@ -69,15 +94,43 @@ describe('TechDocsClient', () => {
 
   describe('getViewUrl', () => {
     it('returns docs view URL', () => {
-      expect(techDocsClient.getViewUrl(entity, 'foo/index.html')).toEqual(
-        'http://localhost/docs/default/component/some-handbook/foo',
-      );
-      expect(techDocsClient.getViewUrl(entity, 'foo/bar/index.html')).toEqual(
+      expect(
+        techDocsClient.getViewUrl(entityWithTechdocsRef, '/index.html'),
+      ).toEqual('http://localhost/docs/default/component/some-handbook/');
+      expect(
+        techDocsClient.getViewUrl(entityWithTechdocsRef, 'foo/index.html'),
+      ).toEqual('http://localhost/docs/default/component/some-handbook/foo');
+      expect(
+        techDocsClient.getViewUrl(entityWithTechdocsRef, 'foo/bar/index.html'),
+      ).toEqual(
         'http://localhost/docs/default/component/some-handbook/foo/bar',
       );
-      expect(techDocsClient.getViewUrl(entity, 'foo/baz.html')).toEqual(
+      expect(
+        techDocsClient.getViewUrl(entityWithTechdocsRef, 'foo/baz.html'),
+      ).toEqual(
         'http://localhost/docs/default/component/some-handbook/foo/baz',
       );
+    });
+  });
+
+  describe('getTechDocsEntitiesResponse', () => {
+    describe('success', () => {
+      it('returns all techdocs entities response', async () => {
+        await expect(
+          techDocsClient.getTechDocsEntitiesResponse(),
+        ).resolves.toEqual({
+          items: [entityWithTechdocsRef],
+        });
+      });
+    });
+  });
+  describe('getTechDocsEntities', () => {
+    describe('success', () => {
+      it('returns all techdocs entities', async () => {
+        await expect(techDocsClient.getTechDocsEntities()).resolves.toEqual([
+          entityWithTechdocsRef,
+        ]);
+      });
     });
   });
 
@@ -94,7 +147,7 @@ describe('TechDocsClient', () => {
       beforeEach(() => {
         server.use(
           rest.get(
-            `${baseUrl}/default/component/some-handbook`,
+            `${baseUrl}/metadata/techdocs/default/component/some-handbook`,
             (_req, res, ctx) => {
               return res(ctx.status(200), ctx.json(mockTechDocsMetadata));
             },
@@ -104,7 +157,7 @@ describe('TechDocsClient', () => {
 
       it('returns expected techdocs metadata', async () => {
         await expect(
-          techDocsClient.getTechDocsMetadata(entity),
+          techDocsClient.getTechDocsMetadata(entityWithTechdocsRef),
         ).resolves.toEqual(mockTechDocsMetadata);
       });
     });
@@ -113,7 +166,7 @@ describe('TechDocsClient', () => {
       beforeEach(() => {
         server.use(
           rest.get(
-            `${baseUrl}/default/component/some-handbook`,
+            `${baseUrl}/metadata/techdocs/default/component/some-handbook-no-techdocs-ref`,
             (_req, res, ctx) => {
               return res(
                 ctx.status(404),
@@ -126,7 +179,7 @@ describe('TechDocsClient', () => {
 
       it('throws an error', async () => {
         await expect(
-          techDocsClient.getTechDocsMetadata(entity),
+          techDocsClient.getTechDocsMetadata(entityWithoutTechdocsRef),
         ).rejects.toThrow('Not Found');
       });
     });
@@ -141,7 +194,7 @@ describe('TechDocsClient', () => {
       beforeEach(() => {
         server.use(
           rest.get(
-            `${baseUrl}/default/component/some-handbook/${filePath}`,
+            `${baseUrl}/static/docs/default/component/some-handbook/${filePath}`,
             (_req, res, ctx) => {
               return res(ctx.status(200), ctx.text(mockTechDocsStaticFile));
             },
@@ -151,7 +204,7 @@ describe('TechDocsClient', () => {
 
       it('returns expected techdocs metadata', async () => {
         await expect(
-          techDocsClient.getTechDocsStaticFile(entity, filePath),
+          techDocsClient.getTechDocsStaticFile(entityWithTechdocsRef, filePath),
         ).resolves.toEqual(mockTechDocsStaticFile);
       });
     });
@@ -160,7 +213,7 @@ describe('TechDocsClient', () => {
       beforeEach(() => {
         server.use(
           rest.get(
-            `${baseUrl}/default/component/some-handbook/${filePath}`,
+            `${baseUrl}/static/docs/default/component/some-handbook/${filePath}`,
             (_req, res, ctx) => {
               return res(
                 ctx.status(404),
@@ -173,7 +226,7 @@ describe('TechDocsClient', () => {
 
       it('throws an error', async () => {
         await expect(
-          techDocsClient.getTechDocsStaticFile(entity, filePath),
+          techDocsClient.getTechDocsStaticFile(entityWithTechdocsRef, filePath),
         ).rejects.toThrow('Not Found');
       });
     });
@@ -184,7 +237,9 @@ describe('TechDocsClient', () => {
       const mockRawHtml = `
         <html>
           <article>
-            <h1 id="title">This is the title<a class="headerlink" href="#title" title="Permanent link"></a></h1>
+            <h1 id="title">
+              "This is the title"
+              <a title="Permanent link" href="#title" class="headerlink">#</a></h1>
             <p>I am a file</p>
             <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 6, 2022</span>
           </article>
@@ -201,14 +256,16 @@ describe('TechDocsClient', () => {
       const mockRawHtml = `
         <html>
           <article>
-            <h1 id="title">This is the title<a class="headerlink" href="#title" title="Permanent link"></a></h1>
+            <h1 id="title">
+              "This is the title with &amp; persand"
+              <a title="Permanent link" href="#title" class="headerlink">#</a></h1>
             <p>I am a file</p>
             <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 6, 2022</span>
           </article>
         </html>`;
 
       expect(techDocsClient.parseTitle(mockRawHtml)).toEqual(
-        'This is the title',
+        'This is the title with & persand',
       );
     });
 

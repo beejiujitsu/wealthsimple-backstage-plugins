@@ -1,8 +1,5 @@
 # Glean Backend
 
-> NOTE: This is currently not in use anymore. However, it could be re-purposed
-> to index other parts of Backstage (e.g. catalog entities, tools, etc.)
-
 Welcome to the Glean backend plugin!
 
 This backend plugin is used to make our Backstage content available in

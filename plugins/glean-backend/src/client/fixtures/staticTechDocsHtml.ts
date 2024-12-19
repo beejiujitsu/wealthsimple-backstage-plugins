@@ -2,7 +2,7 @@ export const htmlFixture = `<!doctype html>
 <html lang="en" class="no-js">
 
 <head>
-  <meta name="description" content="Wealthsimple&#x27;s Engineering Handbook">
+  <meta name="description" content="Company&#x27;s Engineering Handbook">
 </head>
 
 <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
@@ -54,8 +54,8 @@ export const htmlFixture = `<!doctype html>
                       </label>
                       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
                         <li class="md-nav__item">
-                          <a href="#welcome-to-wealthsimple-engineering" class="md-nav__link">
-                            Welcome to Wealthsimple Engineering
+                          <a href="#welcome-to-company-engineering" class="md-nav__link">
+                            Welcome to Company Engineering
                           </a>
                         </li>
                         <li class="md-nav__item">
@@ -80,7 +80,7 @@ export const htmlFixture = `<!doctype html>
                       <ul class="md-nav__list" data-md-scrollfix>
                         <li class="md-nav__item">
                           <a href="onboarding/" class="md-nav__link">
-                            Welcome to Wealthsimple Engineering
+                            Welcome to Company Engineering
                           </a>
                         </li>
                         <li class="md-nav__item">
@@ -152,8 +152,8 @@ export const htmlFixture = `<!doctype html>
                 </label>
                 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
                   <li class="md-nav__item">
-                    <a href="#welcome-to-wealthsimple-engineering" class="md-nav__link">
-                      Welcome to Wealthsimple Engineering
+                    <a href="#welcome-to-company-engineering" class="md-nav__link">
+                      Welcome to Company Engineering
                     </a>
                   </li>
                   <li class="md-nav__item">
@@ -170,14 +170,14 @@ export const htmlFixture = `<!doctype html>
           <article class="md-content__inner md-typeset">
             <h1 id="engineering-handbook">Engineering Handbook<a class="headerlink" href="#engineering-handbook"
                 title="Permanent link">&para;</a></h1>
-            <p>Welcome to Wealthsimple's Engineering Handbook! This is currently a work in
+            <p>Welcome to Company's Engineering Handbook! This is currently a work in
               progress.</p>
             <p>To run the docs site locally, see the
-              <a href="https://github.com/wealthsimple/some-handbook">repo</a>.
+              <a href="https://github.com/company/some-handbook">repo</a>.
             </p>
             <p>Below is the list of topics we would like to cover over time.</p>
-            <h2 id="welcome-to-wealthsimple-engineering"><a href="onboarding/">Welcome to Wealthsimple Engineering</a><a
-                class="headerlink" href="#welcome-to-wealthsimple-engineering" title="Permanent link">&para;</a></h2>
+            <h2 id="welcome-to-company-engineering"><a href="onboarding/">Welcome to Company Engineering</a><a
+                class="headerlink" href="#welcome-to-company-engineering" title="Permanent link">&para;</a></h2>
             <ul>
               <li><a href="onboarding/engineering-values/">Engineering Values</a></li>
               <li><a href="onboarding/dei-commitments/">Engineering Diversity, Equity and Inclusion Commitments</a></li>
@@ -186,7 +186,7 @@ export const htmlFixture = `<!doctype html>
               <li><a href="onboarding/eng-learn/">Onboarding &amp; Training</a></li>
               <li><a href="onboarding/role-expectations/">What is expected of me in my role?</a></li>
               <li><a href="onboarding/getting-help/">How to get help as an Engineer at WS</a></li>
-              <li><a href="onboarding/quality-assurance/">Wealthsimple’s Approach to Quality Assurance</a></li>
+              <li><a href="onboarding/quality-assurance/">Company’s Approach to Quality Assurance</a></li>
               <li><a href="onboarding/useful-developer-tools/">Useful Developer Tools</a></li>
             </ul>
             <h2 id="career-growth"><a href="career-growth/">Career Growth</a><a class="headerlink" href="#career-growth"
@@ -204,7 +204,7 @@ export const htmlFixture = `<!doctype html>
             <ul>
               <li><a href="operational-excellence/incident-response/">Incident Response</a></li>
               <li><a href="operational-excellence/operational-excellence/">What is operational excellence at
-                  Wealthsimple?</a></li>
+                  Company?</a></li>
               <li><a href="operational-excellence/on-call-expectations/">What is expected of me when I'm on call?</a>
               </li>
             </ul>
@@ -215,7 +215,7 @@ export const htmlFixture = `<!doctype html>
               <li><a href="practices-processes/architecture-decisions-records/">What are ADRs?</a></li>
               <li><a href="practices-processes/glossary/#technical-forum">What is Tech Forum?</a></li>
               <li><a href="practices-processes/working-group-how-to/">HOWTO: Start/Operate a Working Group </a></li>
-              <li>Data flows at Wealthsimple (TODO)</li>
+              <li>Data flows at Company (TODO)</li>
             </ul>
             <h2 id="stack-guides"><a href="stack-guides/">Stack Guides</a><a class="headerlink" href="#stack-guides"
                 title="Permanent link">&para;</a></h2>
@@ -231,7 +231,7 @@ export const htmlFixture = `<!doctype html>
                 href="#engineering-architecture" title="Permanent link">&para;</a></h2>
             <ul>
               <li><a href="architecture/current/">What does our current architecture look like?</a></li>
-              <li><a href="architecture/history/">History of the Wealthsimple Architecture</a></li>
+              <li><a href="architecture/history/">History of the Company Architecture</a></li>
               <li><a href="architecture/services/">What teams own what services?</a></li>
             </ul>
             <h2 id="interviewing"><a href="interviewing/">Interviewing</a><a class="headerlink" href="#interviewing"
@@ -244,7 +244,7 @@ export const htmlFixture = `<!doctype html>
             <h2 id="management"><a href="management/">Management</a><a class="headerlink" href="#management"
                 title="Permanent link">&para;</a></h2>
             <ul>
-              <li><a href="https://wealthsimple.quip.com/Q0RVAvEDyDeB/Terms-Acronyms">Acronyms</a></li>
+              <li><a href="https://company.quip.com/Q0RVAvEDyDeB/Terms-Acronyms">Acronyms</a></li>
             </ul>
             <hr>
             <div class="md-source-file">
@@ -261,13 +261,13 @@ export const htmlFixture = `<!doctype html>
     <footer class="md-footer">
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         <a href="onboarding/" class="md-footer__link md-footer__link--next"
-          aria-label="Next: Welcome to Wealthsimple Engineering" rel="next">
+          aria-label="Next: Welcome to Company Engineering" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Welcome to Wealthsimple Engineering
+              Welcome to Company Engineering
             </div>
           </div>
         </a>

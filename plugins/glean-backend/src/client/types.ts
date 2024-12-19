@@ -1,7 +1,7 @@
 export type GleanDocument = {
-  id: string;
+  id: DocumentId;
   title: string;
-  container: string;
+  container: EntityUri;
   datasource: string;
   viewURL: string;
   body: {
@@ -11,3 +11,6 @@ export type GleanDocument = {
   updatedAt: number; // in epoch seconds
   permissions: { allowAnonymousAccess: boolean };
 };
+
+export type EntityUri = `${string & { __brand: 'S+/S+/S+' }}`;
+export type DocumentId = `${EntityUri & { __brand: '/.+' }}`;
