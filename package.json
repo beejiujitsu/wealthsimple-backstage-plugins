@@ -49,5 +49,9 @@
     "*.{json,md}": [
       "prettier --write"
     ]
+  },
+  "volta": {
+    "node": "22.12.0",
+    "yarn": "4.6.0"
   }
 }
