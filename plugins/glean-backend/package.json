@@ -10,8 +10,16 @@
     "main": "dist/index.cjs.js",
     "types": "dist/index.d.ts"
   },
+  "repository": {
+    "type": "git",
+    "directory": "plugins/glean-backend"
+  },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "glean",
+    "pluginPackages": [
+      "@beejiujitsu/backstage-plugin-glean-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
